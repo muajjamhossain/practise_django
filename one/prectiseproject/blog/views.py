@@ -1,35 +1,41 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
+from django.db.models import Q
 
-# List all posts
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'blogs/post_list.html', {'posts': posts})
-    # return HttpResponse('ok')
-    
 
-# Create new post
-def post_create(request):
-    form = PostForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('post_list')
-    return render(request, 'blogs/post_form.html', {'form': form})
+class PostListView(ListView):
+    model = Post
+    template_name = 'blogs/post_list.html'
+    context_object_name = 'posts'
 
-# Update post
-def post_update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    form = PostForm(request.POST or None, instance=post)
-    if form.is_valid():
-        form.save()
-        return redirect('post_list')
-    return render(request, 'blogs/post_form.html', {'form': form})
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) | Q(content__icontains=query)
+            )
+        return Post.objects.all()
 
-# Delete post
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        post.delete()
-        return redirect('post_list')
-    return render(request, 'blogs/post_confirm_delete.html', {'post': post})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blogs/post_form.html'
+    success_url = reverse_lazy('post_list')
+
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blogs/post_form.html'
+    success_url = reverse_lazy('post_list')
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'blogs/post_confirm_delete.html'
+    success_url = reverse_lazy('post_list')

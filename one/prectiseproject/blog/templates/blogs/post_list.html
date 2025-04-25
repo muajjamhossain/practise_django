@@ -1,5 +1,10 @@
-<h1>Posts</h1>
+<h1>Post List</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ query }}" placeholder="Search...">
+  <button type="submit">Search</button>
+</form>
 <a href="{% url 'post_create' %}">Create New Post</a>
+
 <ul>
   {% for post in posts %}
     <li>
@@ -7,5 +12,7 @@
       <a href="{% url 'post_update' post.pk %}">Edit</a>
       <a href="{% url 'post_delete' post.pk %}">Delete</a>
     </li>
+  {% empty %}
+    <li>No posts found.</li>
   {% endfor %}
 </ul>
