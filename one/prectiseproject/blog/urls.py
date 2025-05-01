@@ -7,4 +7,5 @@ urlpatterns = [
     path('category/new/', views.category_create, name='category_create'),
     path('edit/<int:pk>/', views.post_update, name='post_update'),
     path('delete/<int:pk>/', views.post_delete, name='post_delete'),
+    path('send-test-notification/', views.send_test_notification, name='send_test_notification'),
 ]

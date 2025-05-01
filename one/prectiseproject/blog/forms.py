@@ -10,7 +10,9 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter post title here...'
+                'placeholder': 'Enter post title here...',
+                'style': 'color: red;',
+                'custom_class': 'custom-class',  # Custom class for styling
             }),
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -23,7 +25,7 @@ class PostForm(forms.ModelForm):
         }
         labels = {
             'title': 'Blog Title',
-            'content': 'Content',
+            'content': 'Content Test',
             'category': 'Select Category',
         }
 

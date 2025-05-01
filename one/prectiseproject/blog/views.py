@@ -2,6 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Post, Category
 from .forms import PostForm, CategoryForm
 from django.db.models import Q
+# views.py
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+
+from django.http import JsonResponse
+from .utils import send_notification_to_all
 
 # List all posts
 def post_list(request):
@@ -35,6 +42,7 @@ def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
         form.save()
+        send_notification_to_all("New user registered!")
         return redirect('post_list')
     return render(request, 'blogs/post_form.html', {'form': form})
 
@@ -65,3 +73,19 @@ def category_create(request):
         form.save()
         return redirect('post_list')
     return render(request, 'blogs/post_form.html', {'form': form})
+
+
+def send_test_notification(request):
+    message = "This is a test notification."
+    send_notification_to_all(message)
+    return HttpResponse("Test notification sent.")
+
+def send_notification_to_all(message):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "notifications_group",
+        {
+            "type": "send_notification",
+            "message": message,
+        }
+    )

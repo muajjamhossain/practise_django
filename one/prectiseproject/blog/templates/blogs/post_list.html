@@ -41,3 +41,49 @@
     <li>No item found.</li>
   {% endfor %}
 </ul>
+
+<button onclick="sendTestNotification()">Send Test Notification</button>
+
+
+
+<div id="notifications"></div>
+
+<!-- Notification Sound -->
+{% comment %} <audio id="notification-sound" src="{% static 'sounds/notification_sound.mp3' %}" preload="auto"></audio> {% endcomment %}
+
+<script>
+  function sendTestNotification() {
+      fetch('/send-test-notification/');
+  }
+  </script>
+
+
+<script>
+var socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
+
+socket.onmessage = function(e) {
+    var data = JSON.parse(e.data);
+    var message = data['message'];
+
+    // Play the notification sound
+    // var sound = document.getElementById('notification-sound');
+    // sound.play();
+    // sound.volume = 0.7;  // Volume (0 to 1)
+    // sound.loop = false;  // If you want it to loop, set it to true
+    // sound.play();
+
+    // Display the notification in the notification area
+    var notiDiv = document.getElementById('notifications');
+    var newNotification = document.createElement('div');
+    newNotification.className = "alert alert-info";
+    newNotification.innerHTML = message;
+    notiDiv.appendChild(newNotification);
+};
+
+socket.onclose = function(e) {
+    console.error('WebSocket closed unexpectedly');
+};
+
+
+</script>
+
