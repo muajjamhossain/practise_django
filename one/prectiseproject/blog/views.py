@@ -12,11 +12,10 @@ from .utils import send_notification_to_all
 
 # List all posts
 def post_list(request):
-    categories = Category.objects.all()  # ✅ All categories
-
-    category = Category.objects.get(id=1)  # ✅ Get one category with ID 1
-
-    catPost = category.posts.all()  # ✅ Get all posts under that category
+    categories = Category.objects.all()
+    # return HttpResponse(categories)
+    category = Category.objects.get(id=1)
+    catPost = category.posts.all()
     # Note: you used `related_name='posts'` in your model. So it is `posts.all()`, not `post_set.all()`
 
     query = request.GET.get('q')  # ✅ Get search input

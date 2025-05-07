@@ -19,12 +19,12 @@
   {% endfor %}
 </ul>
 
-<h1>Category</h1>
+<h1>Category </h1>
 <a href="{% url 'category_create' %}">Create New Category</a>
 <ul>
-  {% for category in categories %}
+  {% for catItem in categories %}
     <li>
-      <strong>{{ category.name }}</strong> <br>
+      <strong>{{ catItem.name }}</strong> <br>
     </li>
   {% empty %}
     <li>No category found.</li>

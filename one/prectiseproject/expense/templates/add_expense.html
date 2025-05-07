@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <a href="{% url 'expenses' %}">All Expense</a>
+
+        <h1>{{expForm.instance.id|yesno:"Update Expense, Add Expense"}}</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ expForm.as_p }}
+
+            <input type="submit" value="{{expForm.instance.id|yesno:"Update Expense, Add Expense"}}">
+        
+        <script src="" async defer></script>
+    </body>
+</html>

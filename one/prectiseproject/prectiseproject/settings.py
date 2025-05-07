@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'channels',
+    'user',
+    'expense',
 ]
 
 ASGI_APPLICATION = 'prectiseproject.asgi.application'
